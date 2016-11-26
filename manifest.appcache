@@ -1,0 +1,12 @@
+CACHE MANIFEST
+# version Sat Nov 26 2016 00:41:46 GMT+0000 (GMT)
+CACHE:
+app.js
+image-gallery.css
+index.html
+main.css
+install-sw.js
+cache.html
+cache.js
+NETWORK:
+FALLBACK:
