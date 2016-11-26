@@ -4,15 +4,14 @@ var dest = './dist',
 
 module.exports = {
   browserSync: {
-    // server: {
-    //   // We're serving the src folder as well
-    //   // for sass sourcemap linking
-    //   baseDir: [dest, src]
-    // },
-    // files: [
-    //   dest + '/**'
-    // ]
-    proxy: "localhost:3000"
+    server: {
+      // We're serving the src folder as well
+      // for sass sourcemap linking
+      baseDir: [dest, src]
+    },
+    files: [
+      dest + '/**'
+    ]
   },
   markup: {
     src: src + "/www/**",

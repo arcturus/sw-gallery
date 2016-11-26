@@ -11,6 +11,18 @@ import queryString from 'query-string';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Subheader from 'material-ui/Subheader';
 import Gallery from './Gallery';
+import Upload from './Upload';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
+const floatingStyle = {
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
+};
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -24,8 +36,33 @@ class Main extends Component {
 
     let parsed = queryString.parse(location.search);
     this.state = {
-      showHeader: parsed.headless ? false : true
+      showHeader: parsed.headless ? false : true,
+      uploading: false,
+      photos: []
     }
+  }
+
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    fetch('/api/v1/allphotos').then(req => {
+      return req.json();
+
+    }).
+    then((photos) => {
+      this.setState({photos});
+    }).
+    catch(e => {
+      this.setState({photos: []});
+    });
+  }
+
+  toggleUpload() {
+    this.setState({
+      uploading: !this.state.uploading
+    });
   }
 
   render() {
@@ -33,7 +70,11 @@ class Main extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
       <div>
         {this.renderHeader()}
-        <Gallery/>
+        <Gallery photos={this.state.photos} />
+        <FloatingActionButton onTouchTap={this.toggleUpload.bind(this)} secondary={true} style={floatingStyle}>
+          <ContentAdd/>
+        </FloatingActionButton>
+        <Upload opened={this.state.uploading} handleClosing={this.toggleUpload.bind(this)} onUploaded={this.fetchData.bind(this)}/>
       </div>
       </MuiThemeProvider>
     );
@@ -42,7 +83,7 @@ class Main extends Component {
   renderHeader() {
     if (this.state.showHeader) {
       return (<AppBar
-          title="Mi-Kasa Gallery"
+          title="Gallery"
           iconClassNameRight="muidocs-icon-navigation-expand-more"
           iconClassNameLeft="muidocs-icon-navigation-expand-more"/>);
     } else {
